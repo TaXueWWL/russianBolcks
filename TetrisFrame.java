@@ -1,58 +1,58 @@
-//package 露铆脗脼脣鹿路艙驴茅;
+//package 俄罗斯方块;
 
 /**
- *脧脭脢鸥脫脦脧路脙忙掳氓Tetrisblok艙莽脙忙拢卢艗脫脠毛虏脣碌楼脪脭艗掳脢卤艗盲艗脿脤媒
+ *显示游戏面板Tetrisblok界面，加入菜单以及时间监听
  */
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-//import 露铆脗脼脣鹿路艙驴茅.Tetrisblok;
+//import 俄罗斯方块.Tetrisblok;
 import javax.swing.*;
 @SuppressWarnings("serial")
 public class TetrisFrame extends JFrame implements ActionListener{
-	static JMenu game = new JMenu("脫脦脧路");
-	JMenuItem newgame = game.add("脨脗脫脦脧路");
-	JMenuItem pause = game.add("脭脻脥拢");
-	JMenuItem goon = game.add("艗脤脨酶");
-	JMenuItem exit = game.add("脥脣鲁枚");
-	static JMenu help = new JMenu("掳茂脰煤");
-	JMenuItem about = help.add("鹿脴脫脷");
+	static JMenu game = new JMenu("游戏");
+	JMenuItem newgame = game.add("新游戏");
+	JMenuItem pause = game.add("暂停");
+	JMenuItem goon = game.add("继续");
+	JMenuItem exit = game.add("退出");
+	static JMenu help = new JMenu("帮助");
+	JMenuItem about = help.add("关于");
 	Tetrisblok a = new Tetrisblok();
 	public TetrisFrame(){
 		addKeyListener(a);
 		this.add(a);
-		newgame.addActionListener(this);//"脨脗脫脦脧路"虏脣碌楼脧卯
-		pause.addActionListener(this);//"脭脻脥拢"虏脣碌楼脧卯
-		goon.addActionListener(this);//"艗脤脨酶"虏脣碌楼脧卯
-		about.addActionListener(this);//"鹿脴脫脷"虏脣碌楼脧卯
-		exit.addActionListener(this);//"脥脣鲁枚"虏脣碌楼脧卯
+		newgame.addActionListener(this);//"新游戏"菜单项
+		pause.addActionListener(this);//"暂停"菜单项
+		goon.addActionListener(this);//"继续"菜单项
+		about.addActionListener(this);//"关于"菜单项
+		exit.addActionListener(this);//"退出"菜单项
 	}
 	
 	public void actionPerformed(ActionEvent e){
-		if(e.getSource() == newgame)//"脨脗脫脦脧路"虏脣碌楼脧卯
+		if(e.getSource() == newgame)//"新游戏"菜单项
 		{
 			a.newGame();
 		}
-		else if(e.getSource() == pause)//"脭脻脥拢"虏脣碌楼脧卯
+		else if(e.getSource() == pause)//"暂停"菜单项
 		{
 			a.pauseGame();
 		}
-		else if(e.getSource() == goon)//"艗脤脨酶"虏脣碌楼脧卯
+		else if(e.getSource() == goon)//"继续"菜单项
 		{
 			a.continueGame();
 		}
-		else if(e.getSource() == about)//"鹿脴脫脷"虏脣碌楼脧卯
+		else if(e.getSource() == about)//"关于"菜单项
 		{
-			DisplayToast("掳沤脳贸脫脪艗眉脪脝露炉\n脡脧艗眉艙酶脨脨路艙驴茅脨媒脳陋~\n\r\rMade_by_WWL\nFor SSR_LSC_LWW_CYD_XM");
+			DisplayToast("按左右键移动\n上键进行方块旋转~\n\r\rMade_by_WWL\nFor SSR_LSC_LWW_CYD_XM");
 		}
-		else if(e.getSource() == exit)//"脥脣鲁枚"虏脣碌楼脧卯
+		else if(e.getSource() == exit)//"退出"菜单项
 		{
 			System.exit(0);
 		}
 	}
 	
 	public void DisplayToast(String str){
-		JOptionPane.showMessageDialog(null, str, "脫脦脧路脤谩脢鸥", 
+		JOptionPane.showMessageDialog(null, str, "游戏提示", 
 									JOptionPane.ERROR_MESSAGE);
 	}
 	
@@ -64,14 +64,29 @@ public class TetrisFrame extends JFrame implements ActionListener{
 		menu.add(game);
 		menu.add(help);
 		frame.setLocationRelativeTo(null);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);//"艙谩脢酶"掳沤脜楼驴脡脢鹿脫脙
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);//"结束"按钮可使用
 		frame.setSize(320, 380);
-		frame.setTitle("露铆脗脼脣鹿路艙驴茅V1.0--for XM");
+		frame.setTitle("俄罗斯方块V1.0--for XM");
 		//frame.setUndecorated(true);
 		frame.setVisible(true);
 		frame.setResizable(false);
 	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -1,11 +1,11 @@
-//package 露铆脗脼脣鹿路艙驴茅;
+//package 俄罗斯方块;
 
-/**露铆脗脼脣鹿路艙驴茅
+/**俄罗斯方块
  *date 14.11.17
  *@version 1.0
  *
- *@author 脦盲脦脛脕艗
- */
+ *@author 武文良
+ **/
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -13,61 +13,61 @@ import javax.swing.Timer;
 
  class Tetrisblok extends JPanel implements KeyListener{
 	/**
-	 *露铆脗脼脣鹿路艙驴茅脌脿Tetrisblok艗脤鲁脨JPanel拢卢脥卢脢卤脢碌脧脰艗眉脜脤脢脗艗镁艙脫驴脷KeyListener
+	 *俄罗斯方块类Tetrisblok继承JPanel，同时实现键盘事件接口KeyListener
 	 */
 	private static final long serialVersionUID = 1L;
-	private int blockType;//路艙驴茅脌脿脨脥
-	private int turnState;//路艙驴茅脨媒脳陋脳沤脤卢
-	private int score = 0;//路脰脢媒
-	private int nextblockType = -1, nextturnState = -1;//脧脗脪禄路艙驴茅碌脛脌脿脨脥潞脥脳沤脤卢
-	private int x, y;//碌卤脟掳路艙驴茅碌脛脦禄脰脙
-	private Timer timer;//露拧脢卤脝梅
-	//脫脦脧路碌脴脥艗拢卢沤忙沤垄脪脩鸥颅路脜脧脗碌脛路艙驴茅拢拧1拢漏艗掳脦搂脟艙拢拧2拢漏拢卢驴脮掳脳沤艩脦陋拢拧0拢漏
+	private int blockType;//方块类型
+	private int turnState;//方块旋转状态
+	private int score = 0;//分数
+	private int nextblockType = -1, nextturnState = -1;//下一方块的类型和状态
+	private int x, y;//当前方块的位置
+	private Timer timer;//定时器
+	//游戏地图，存储已经放下的方块（1）及围墙（2），空白处为（0）
 	int[][] map = new int[12][21];
-	//路艙驴茅碌脛脨脦脳沤拢卢脫脨碌鹿Z,Z,L,J,I,脤茂拢卢潞脥T 7脰脰
+	//方块的形状，有倒Z,Z,L,J,I,田，和T 7种
 	
  /**
-  *脠媒脦卢脢媒脳茅shapes沤忙沤垄7脰脰路艙驴茅脨脦脳沤艗掳脝盲脨媒脳陋卤盲脨脦拢卢沤煤脗毛脠莽脧脗
+  *三维数组shapes存储7种方块形状及其旋转变形，代码如下
   */
   private final int shapes[][][] = new int[][][]{
-	//鲁鈧屆礣脨脦 ***
-	//         隆脕
+	//长条T形 ***
+	//         ×
 	{	{0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0},
 		{0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0},
 		{0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0},
 		{0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0}},		
-	//碌鹿Z脳脰脨脦  **
+	//倒Z字形  **
 	//        **
 	{	{0,1,1,0,1,1,0,0,0,0,0,0,0,0,0,0},
 		{1,0,0,0,1,1,0,0,0,1,0,0,0,0,0,0},
 		{0,1,1,0,1,1,0,0,0,0,0,0,0,0,0,0},
 		{1,0,0,0,1,1,0,0,0,1,0,0,0,0,0,0}},
-	//Z脳脰脨脦	  **
+	//Z字形	  **
 	//         **
 	{	{1,1,0,0,0,1,1,0,0,0,0,0,0,0,0,0},
 		{0,1,0,0,1,1,0,0,1,0,0,0,0,0,0,0},
 		{1,1,0,0,0,1,1,0,0,0,0,0,0,0,0,0},
 		{0,1,0,0,1,1,0,0,1,0,0,0,0,0,0,0}},
-	//J脳脰脨脦   *
+	//J字形   *
 	//        ***
 	{	{0,1,0,0,0,1,0,0,1,1,0,0,0,0,0,0},
 		{1,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0},
 		{1,1,0,0,1,0,0,0,1,0,0,0,0,0,0,0},
 		{1,1,1,0,0,0,1,0,0,0,0,0,0,0,0,0}},
-	//脤茂脳脰脨脦  **
+	//田字形  **
 	//		  **
 	{	{1,1,0,0,1,1,0,0,0,0,0,0,0,0,0,0},
 		{1,1,0,0,1,1,0,0,0,0,0,0,0,0,0,0},
 		{1,1,0,0,1,1,0,0,0,0,0,0,0,0,0,0},
 		{1,1,0,0,1,1,0,0,0,0,0,0,0,0,0,0}},
-	//L脳脰脨脦   *
+	//L字形   *
 	//		  *	
-	//		  *隆脕	
+	//		  *×	
 	{	{1,0,0,0,1,0,0,0,1,1,0,0,0,0,0,0},
 		{1,1,1,0,1,0,0,0,0,0,0,0,0,0,0,0},
 		{1,1,0,0,0,1,0,0,0,1,0,0,0,0,0,0},
 		{0,0,1,0,1,1,1,0,0,0,0,0,0,0,0,0}},
-	//隆脥脳脰脨脦  *
+	//⊥字形  *
 	//		 ***
 	{	{0,1,0,0,1,1,1,0,0,0,0,0,0,0,0,0},
 		{0,1,0,0,1,1,0,0,0,1,0,0,0,0,0,0},
@@ -75,24 +75,24 @@ import javax.swing.Timer;
 		{0,1,0,0,0,1,1,0,0,1,0,0,0,0,0,0}}};
 		
  /**
-  *虏煤脡煤脧脗脪禄路艙驴茅艗掳脝盲脨媒脳陋脳沤脤卢
+  *产生下一方块及其旋转状态
   */
   public void newblock(){
-	//脙禄脫脨脧脗脪禄路艙驴茅
+	//没有下一方块
 	if(nextblockType == -1 && nextturnState == -1){
 		blockType = (int)(Math.random()*1000)%7;
 		turnState = (int)(Math.random()*1000)%4;
 		nextblockType = (int)(Math.random() * 1000)%7;
 		nextturnState = (int)(Math.random() * 1000)%4;
 	}	
-	else{//脪脩脫脨脧脗脪禄路艙驴茅
+	else{//已有下一方块
 		blockType = nextblockType;
 		turnState = nextturnState;
 		nextblockType = (int)(Math.random() * 1000)%7;
 		nextturnState = (int)(Math.random() * 1000)%4;
 	}
-	x = 4;	y = 0;//脝脕脛禄脡脧路艙脰脨脩毛
-	if(gameover(x, y) == 1){//脫脦脧路艙谩脢酶
+	x = 4;	y = 0;//屏幕上方中央
+	if(gameover(x, y) == 1){//游戏结束
 		newmap();
 		drawwall();
 		score = 0;
@@ -100,20 +100,20 @@ import javax.swing.Timer;
 	}
   }
  /**
-  *禄颅脦搂脟艙
+  *画围墙
   */
   public void drawwall(){
 	int i, j;
 	for(i = 0; i < 12; i++){
 		map[i][20] = 2;
 	}
-	for(j = 0; j < 21; j++){//脭脷0脕脨潞脥11脕脨
+	for(j = 0; j < 21; j++){//在0列和11列
 		map[11][j] = 2;
 		map[0][j] = 2;
 	}
 			
   }
-  //鲁玫脢艗禄炉碌脴脥艗
+  //初始化地图
   public void newmap(){
 	int i, j;
 	for(i = 0; i < 12; i++){
@@ -123,9 +123,9 @@ import javax.swing.Timer;
 	}
   }
   /**
-   *Tetrisblok()鹿鹿脭矛路艙路拧虏煤脡煤脪禄啪枚脨脗碌脛脧脗脗盲路艙驴茅拢卢虏垄脝么露炉露拧脢卤脝梅隆拢
-   *露拧脢卤脝梅沤楼路垄脢脗艗镁脥锚鲁脡脝脕脛禄脝脕脛禄脰脴禄颅拢卢脜脨露脧碌卤脟掳路艙驴茅脢脟路帽驴脡脪脭脧脗脗盲
-   *虏煤脡煤脨脗碌脛路艙驴茅
+   *Tetrisblok()构造方法产生一个新的下落方块，并启动定时器。
+   *定时器触发事件完成屏幕屏幕重画，判断当前方块是否可以下落
+   *产生新的方块
    */
    Tetrisblok(){
 	newblock();
@@ -134,52 +134,52 @@ import javax.swing.Timer;
 	timer = new Timer(500, new TimerListener());//0.5s
 	timer.start();
    }
-   //露拧脢卤脝梅艗脿脤媒脢脗艗镁
+   //定时器监听事件
    class TimerListener implements ActionListener{
 	public void actionPerformed(ActionEvent e){
-		if(blow(x, y + 1, blockType, turnState) == 1){//驴脡脪脭脧脗脗盲
-			y = y + 1;//碌卤脟掳路艙驴茅脧脗脗盲
+		if(blow(x, y + 1, blockType, turnState) == 1){//可以下落
+			y = y + 1;//当前方块下落
 		}
-		if(blow(x, y + 1, blockType, turnState) == 0){//虏禄驴脡脪脭脧脗脗盲
-			add(x, y, blockType, turnState);//鹿脤露拧碌卤脟掳路艙驴茅
-			delline();//脧没脠楼脗煤脨脨
-			newblock();//虏煤脡煤脨脗碌脛路艙驴茅
+		if(blow(x, y + 1, blockType, turnState) == 0){//不可以下落
+			add(x, y, blockType, turnState);//固定当前方块
+			delline();//消去满行
+			newblock();//产生新的方块
 		}
 		repaint();
 	}
    }
-   //虏脣碌楼脢脗艗镁,沤茂碌艙脫脦脧路脭脻脥拢潞脥艗脤脨酶
-public void newGame()//脨脗脫脦脧路
+   //菜单事件,达到游戏暂停和继续
+   public void newGame()//新游戏
    {
 		newblock();
 		newmap();
 		drawwall();
    }
-   public void pauseGame()//脭脻脥拢脫脦脧路
+   public void pauseGame()//暂停游戏
    {
 		timer.stop();
    }
-   public void continueGame()//艗脤脨酶脫脦脧路
+   public void continueGame()//继续游戏
    {
 		timer.start();
    }
    /**
-    *turn()脨媒脳陋碌卤脟掳路艙驴茅拢卢脨媒脳陋沤脦脢媒艗脫脪禄潞贸拢卢blow脜脨露脧脢脟路帽驴脡脪脭
-	*脨媒脳陋拢卢虏禄驴脡脪脭脭貌脨媒脳陋沤脦脢媒禄脰啪沤脦陋脭颅脌沤碌脛脰碌
+    *turn()旋转当前方块，旋转次数加一后，blow判断是否可以
+	*旋转，不可以则旋转次数恢复为原来的值
 	*/
 	
-	//脨媒脳陋碌卤脟掳路艙驴茅
+	//旋转当前方块
 	public void turn(){
 		int tempturnState = turnState;
 		turnState = (turnState + 1) % 4;
-		if(blow(x, y, blockType, turnState) == 1){//驴脡脪脭脨媒脳陋
+		if(blow(x, y, blockType, turnState) == 1){//可以旋转
 		}
-		if(blow(x, y, blockType, turnState) == 0){//虏禄驴脡脨媒脳陋
-			turnState = tempturnState;//艙芦脨媒脳陋沤脦脢媒禄脰啪沤脦陋脭颅脌沤碌脛脰碌
+		if(blow(x, y, blockType, turnState) == 0){//不可旋转
+			turnState = tempturnState;//将旋转次数恢复为原来的值
 		}
 		repaint();
 	}
-	//路艙脧貌脪脝露炉路艙驴茅拢卢脜脨露脧驴脡脪脝露炉潞贸脰脴禄颅
+	//方向移动方块，判断可移动后重画
    public void left(){
 	if(blow(x - 1, y, blockType, turnState) == 1){
 		x = x - 1;
@@ -195,17 +195,17 @@ public void newGame()//脨脗脫脦脧路
    }
    
    public void down(){
-	if(blow(x, y + 1, blockType, turnState) == 1){//驴脡脪脭脧脗脗盲
+	if(blow(x, y + 1, blockType, turnState) == 1){//可以下落
 		y = y + 1;
 	}
-	if(blow(x, y + 1, blockType, turnState) == 0){//虏禄脛脺脧脗脗盲
+	if(blow(x, y + 1, blockType, turnState) == 0){//不能下落
 		add(x, y, blockType, turnState);
 		newblock();
 		delline();
 	}
 	repaint();
    }
-   //脜脨露脧脪脝露炉禄貌脨媒脳陋潞贸脦禄脰脙脢脟路帽潞脧路拧拢卢脢脟路帽脫毛脟艙卤脷脜枚脳虏
+   //判断移动或旋转后位置是否合法，是否与墙壁碰撞
    public int blow(int x, int y, int blockType, int turnState){
 		for(int a = 0; a < 4; a++){
 			for(int b = 0; b < 4; b++){
@@ -219,18 +219,18 @@ public void newGame()//脨脗脫脦脧路
 		}
 		return 1;
    }
-   //delline()脧没脠楼脗煤脨脨拢卢碌脷d脨脨脗煤脭貌脡脧路艙路艙驴茅脧脗脪脝
+   //delline()消去满行，第d行满则上方方块下移
    public void delline(){
 		int c = 0;
 		for(int b = 0; b < 21; b++){
 			for(int a = 0; a < 12; a++){
 				if(map[a][b] == 1){
 					c += 1;
-					if(c == 10){//啪脙脨脨脗煤
+					if(c == 10){//该行满
 						score += 10;
 						for(int d = b; d > 0; d--){
 							for(int e = 0; e < 12; e++){
-								//脡脧路艙路艙驴茅脧脗脪脝
+								//上方方块下移
 								map[e][d] = map[e][d - 1];
 							}
 						}
@@ -247,7 +247,7 @@ public void newGame()//脨脗脫脦脧路
 		}
 		return 0;
    }
-   //脤铆艗脫碌卤脟掳路艙驴茅碌艙碌脴脥艗
+   //添加当前方块到地图
    public void add(int x, int y, int blockType, int turnState){
 		int j = 0;
 		for(int a = 0; a < 4; a++){
@@ -259,39 +259,39 @@ public void newGame()//脨脗脫脦脧路
 			}
 		}
    }
-   //paint()脰脴禄颅脝脕脛禄
+   //paint()重画屏幕
    public void paint(Graphics g){
-		super.paint(g);//碌梅脫脙啪啪脌脿碌脛paint拢拧拢漏路艙路拧拢卢脢碌脧脰鲁玫脢艗禄炉脟氓脝脕
+		super.paint(g);//调用父类的paint（）方法，实现初始化清屏
 		int i, j;
-		//禄颅碌卤脟掳路艙驴茅
+		//画当前方块
 		for(j = 0; j < 16; j++){
 			if(shapes[blockType][turnState][j] == 1){
 				g.fillRect((j % 4 + x + 1) * 15, (j / 4 + y) * 15, 15, 15);  
 			}
 		}
-		//禄颅脪脩鸥颅鹿脤露拧碌脛路艙驴茅潞脥脦搂脟艙
+		//画已经固定的方块和围墙
 		for(j = 0; j < 21; j++){
 			for(i = 0; i < 12; i++){
 				if(map[i][j] == 1){
-					//禄颅路艙驴茅
+					//画方块
 					g.fillRect(i * 15, j * 15, 15, 15);
 				}
 				if(map[i][j] == 2){
-					//禄颅脦搂脟艙
+					//画围墙
 					g.fillRect(i * 15, j * 15, 15, 15);
 				}
 			}
 		}
 		g.drawString("SCORE= " + score, 225, 15);
 		g.drawString("nextBlockShape ", 225, 50);
-		//脭脷沤掳驴脷脫脪虏脿脟酶脫貌禄忙脰脝脧脗脪禄路艙驴茅
+		//在窗口右侧区域绘制下一方块
 		for(j = 0; j < 16; j++){
 			if(shapes[nextblockType][nextturnState][j] == 1){
 				g.fillRect(225 + (j % 4) * 15, (j / 4) * 15 + 100, 15, 15);
 			}
 		}
    }
-   //艗眉脜脤艗脿脤媒
+   //键盘监听
    public void keyPressed(KeyEvent e){
 		switch(e.getKeyCode()){
 			case KeyEvent.VK_DOWN:
@@ -312,8 +312,7 @@ public void newGame()//脨脗脫脦脧路
    public void keyReleased(KeyEvent e){
    }
    public void keyTyped(KeyEvent e){
-   }
-
+   } 
 }
  
  
@@ -417,4 +416,4 @@ public void newGame()//脨脗脫脦脧路
  
  
  
-
+ 
